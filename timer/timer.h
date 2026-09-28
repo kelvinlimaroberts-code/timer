@@ -6,7 +6,7 @@ private:
 protected:
 	std::chrono::steady_clock::time_point start;
 	std::chrono::steady_clock::time_point end;
-	long long duration = 0;
+	long long elapsed = 0;
 
 public:
 	void StartTimer()
@@ -17,41 +17,65 @@ public:
 	{
 		end = std::chrono::high_resolution_clock::now();
 	}
-	auto ElapsedInNanoSeconds()
+	long long ElapsedInNanoSeconds()
 	{
-		duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-		return duration;
+		elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+		return elapsed;
 	}
-	auto ElapsedInMicroSeconds()
+	long long ElapsedInMicroSeconds()
 	{
-		return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-	}
-
-	auto ElapsedInMilliSeconds()
-	{
-		return std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+		elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+		return elapsed;
 	}
 
-	auto ElapsedInSeconds()
+	long long ElapsedInMilliSeconds()
 	{
-		return std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+		elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+		return elapsed;
+	}
+
+	long long ElapsedInSeconds()
+	{
+		elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+		return elapsed;
 	}
 };
 
-class timer_average:timer
+class timer_average : public timer
 {
 private:
 	int timesCollected = 0;
-	int timeArrayIndex = 0;
-	long long allTimes[];
+	long long totalTime = 0;
+	long long averageTime = 0;
+	long long minTime = 9223372036854775807;
+	long long maxTime = 0;
+
 public:
-	
-	void howManyTimesCollected(int amount)
-	{
-		timesCollected = amount;
-	}
 	void StoreTime()
 	{
-		
+		timesCollected++;
+		totalTime += elapsed;
+		if (elapsed < minTime)
+		{
+			minTime = elapsed;
+		}
+		if (elapsed > maxTime)
+		{
+			maxTime = elapsed;
+		}
+	}
+	long long Average()
+	{
+		averageTime = totalTime / timesCollected;
+		return averageTime;
+	}
+	long long TimeMin()
+	{
+		return minTime;
+	}
+
+	long long TimeMax()
+	{
+		return maxTime;
 	}
 };
