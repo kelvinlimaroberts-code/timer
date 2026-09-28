@@ -1,20 +1,48 @@
-// timer.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include "timer.h"
+const int NUM_LOOPS = 1000;
+int integer = 765;
+float floateger = 87346.7635;
+double doublager = 173264.821368;
+long longeger = 23456789;
+long long coutTime = 0;
+long long printFTime = 0;
+
+void useCOut()
+{
+    timer dt;
+    dt.StartTimer();
+    for (int i = 0; i < NUM_LOOPS; i++)
+    {
+        std::cout << "\nI am using C Out right now. I like numbers."
+            << "\nmy integer: " << integer
+            << "\nmy floateger: " << floateger
+            << "\nmy doublager: " << doublager
+            << "\nmy longeger: " << longeger;
+    }
+    
+    dt.EndTimer();
+    coutTime = dt.ElapsedInMicroSeconds();
+}
+
+void usePrintF()
+{
+    timer dt2;
+    dt2.StartTimer();
+    for (int i = 0; i < NUM_LOOPS; i++)
+    {
+        std::printf("\n\nI am using Print F right now. I like numbers.\nmy integer: %i\nmy floateger: %f\nmy doublager: %lf\nmy longeger: %li", integer, floateger, doublager, longeger);
+    }
+    dt2.EndTimer();
+    printFTime = dt2.ElapsedInMicroSeconds();
+}
 
 int main()
 {
     std::cout << "Hello World!\n";
+    useCOut();
+    usePrintF();
+
+    std::cout << "\n\nCout Time: " << coutTime << "\nPrintF Time: " << printFTime;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
