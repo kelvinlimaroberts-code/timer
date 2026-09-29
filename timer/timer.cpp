@@ -11,11 +11,11 @@ long long coutTimeMax = 0;
 long long printFTimeAverage = 0;
 long long printFTimeMin = 0;
 long long printFTimeMax = 0;
+timer_file dt;
+timer_file dt2;
 
-
-void useCOut()
+void static useCOut()
 {
-    timer_average dt;
     for (int i = 0; i < NUM_LOOPS; i++)
     {
         dt.StartTimer();
@@ -28,15 +28,15 @@ void useCOut()
         dt.ElapsedInNanoSeconds();
         dt.StoreTime();
     }
+    dt.CalculateOutputs();
     coutTimeAverage = dt.Average();
     coutTimeMin = dt.TimeMin();
     coutTimeMax = dt.TimeMax();
-
+    dt.PrintToFile("CodeTimerOutputONE");
 }
 
-void usePrintF()
+void static usePrintF()
 {
-    timer_average dt2;
     for (int i = 0; i < NUM_LOOPS; i++)
     {
         dt2.StartTimer();
@@ -45,9 +45,11 @@ void usePrintF()
         dt2.ElapsedInNanoSeconds();
         dt2.StoreTime();
     }
+    dt2.CalculateOutputs();
     printFTimeAverage = dt2.Average();
     printFTimeMin = dt2.TimeMin();
     printFTimeMax = dt2.TimeMax();
+    dt2.PrintToFile("CodeTimerOutputTWO");
 }
 
 int main()
@@ -56,8 +58,8 @@ int main()
     useCOut();
     usePrintF();
 
-    std::cout << "\n\n\nCout Average: " << coutTimeAverage << "\nCout Min: " << coutTimeMin << "\nCout Max: " << coutTimeMax
-        << "\n\nPrintF Average: " << printFTimeAverage << "\nPrintF Min: " << printFTimeMin << "\nPrintF Max: "<< printFTimeMax
+    std::cout << "\n\n\nCout Average: " << coutTimeAverage << ' ' << dt.getUnit() << "\nCout Min: " << coutTimeMin << ' ' << dt.getUnit() << "\nCout Max: " << coutTimeMax << ' '  << dt.getUnit()
+        << "\n\nPrintF Average: " << printFTimeAverage << ' ' << dt2.getUnit()  << "\nPrintF Min: " << printFTimeMin<<' '<< dt2.getUnit()<<"\nPrintF Max: "<< printFTimeMax<<' '<< dt2.getUnit()
         << "\n\n";
 }
 
