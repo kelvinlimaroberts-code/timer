@@ -14,8 +14,8 @@ protected:
 public:
 	void StartTimer()
 	{
-		start = std::chrono::high_resolution_clock::now();
 		timerEnded = false;
+		start = std::chrono::high_resolution_clock::now();
 	}
 	void EndTimer()
 	{
