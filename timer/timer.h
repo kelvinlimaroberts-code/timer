@@ -4,18 +4,18 @@
 class timer
 {
 private:
+protected:
 	std::chrono::steady_clock::time_point start;
 	std::chrono::steady_clock::time_point end;
-	enum UnitTypes {NANO, MICRO, MILLI, SEC};
+	enum UnitTypes { NANO, MICRO, MILLI, SEC };
 	UnitTypes unit = NANO;
-protected:
 	long long elapsed = 0;
 	bool timerEnded = false;
 public:
 	void StartTimer()
 	{
-		timerEnded = false;
 		start = std::chrono::high_resolution_clock::now();
+		timerEnded = false;
 	}
 	void EndTimer()
 	{
@@ -47,33 +47,6 @@ public:
 		elapsed = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 		unit = SEC;
 		return elapsed;
-	}
-
-	std::string getUnit()
-	{
-		std::string out;
-		switch (unit)
-		{
-		case NANO:
-			out = "nanoseconds";
-			break;
-
-		case MICRO:
-			out = "microseconds";
-			break;
-
-		case MILLI:
-			out = "milliseconds";
-			break;
-
-		case SEC:
-			out = "seconds";
-			break;
-
-		default:
-			out = "?";
-		}
-		return out;
 	}
 };
 
@@ -128,7 +101,32 @@ public:
 		return maxTime;
 	}
 
+	std::string getUnit()
+	{
+		std::string out;
+		switch (unit)
+		{
+		case NANO:
+			out = "nanoseconds";
+			break;
 
+		case MICRO:
+			out = "microseconds";
+			break;
+
+		case MILLI:
+			out = "milliseconds";
+			break;
+
+		case SEC:
+			out = "seconds";
+			break;
+
+		default:
+			out = "?";
+		}
+		return out;
+	}
 };
 
 
@@ -152,5 +150,5 @@ public:
 			OutputFile.close();  //close file
 		}
 	}
-	
+
 };
