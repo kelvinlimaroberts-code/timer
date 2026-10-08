@@ -1,7 +1,9 @@
 #pragma once
 #include <chrono>
 #include <fstream>
-class timer
+#include <iostream>
+
+class Timer
 {
 private:
 protected:
@@ -48,58 +50,6 @@ public:
 		unit = SEC;
 		return elapsed;
 	}
-};
-
-class timer_average : public timer
-{
-private:
-	const int howManyTimeSlotsPossible = 999999;
-protected:
-	long long timesArray[999999]; //how many time
-	int timesCollected = 0;
-	long long totalTime = 0;
-	long long averageTime = 0;
-	long long minTime = 0;
-	long long maxTime = 0;
-public:
-	void StoreTime()
-	{
-		if (timesCollected < howManyTimeSlotsPossible)
-		{
-			timesArray[timesCollected] = elapsed;
-			timesCollected++;
-		}
-	}
-	void CalculateOutputs()
-	{
-		minTime = timesArray[0];
-		maxTime = timesArray[0];
-		for (int i = 1; i < timesCollected; i++)
-		{
-			totalTime += timesArray[i];
-			if (timesArray[i] < minTime)
-			{
-				minTime = timesArray[i];
-			}
-			else if (timesArray[i] > maxTime)
-			{
-				maxTime = timesArray[i];
-			}
-		}
-		averageTime = totalTime / timesCollected;
-	}
-	long long Average()
-	{
-		return averageTime;
-	}
-	long long TimeMin()
-	{
-		return minTime;
-	}
-	long long TimeMax()
-	{
-		return maxTime;
-	}
 
 	std::string getUnit()
 	{
@@ -129,26 +79,102 @@ public:
 	}
 };
 
-
-class timer_file : public timer_average
+class Timer_Average : public Timer
 {
 private:
-	std::string fileEnd = ".csv";
+	const static int howManyTimeSlotsPossible = 9999;
+	bool calculatedOutputs = false;
+protected:
+	long timesArray[howManyTimeSlotsPossible]; //how many time
+	int timesCollected = 0;
+	long totalTime = 0;
+	long averageTime = 0;
+	long minTime = 0;
+	long maxTime = 0;
 public:
-	void PrintToFile(std::string FileName = "CodeTimerOutputs")
+	void StoreTime()
+	{
+		if (timesCollected < howManyTimeSlotsPossible)
+		{
+			timesArray[timesCollected] = elapsed;
+			timesCollected++;
+		}
+	}
+	void CalculateOutputs()
+	{
+		minTime = timesArray[0];
+		maxTime = timesArray[0];
+		for (int i = 1; i < timesCollected; i++)
+		{
+			totalTime += timesArray[i];
+			if (timesArray[i] < minTime)
+			{
+				minTime = timesArray[i];
+			}
+			else if (timesArray[i] > maxTime)
+			{
+				maxTime = timesArray[i];
+			}
+		}
+		averageTime = totalTime / timesCollected;
+		calculatedOutputs = true;
+	}
+	long long Average()
+	{
+		return averageTime;
+	}
+	long long TimeMin()
+	{
+		return minTime;
+	}
+	long long TimeMax()
+	{
+		return maxTime;
+	}
+
+	void OutputResults()
+	{
+		if (!calculatedOutputs) CalculateOutputs();
+		std::cout << "\n\n"
+			<< "\naverage," << Average() << ' ' << getUnit()
+			<< "\nmin," << TimeMin() << ' ' << getUnit()
+			<< "\nmax," << TimeMax() << ' ' << getUnit()
+			<< "\n\n";
+	}
+};
+
+
+class Timer_File : public Timer_Average
+{
+private:
+	bool hasPrinted = false;
+public:
+	void PrintToFile(std::string FileName = "CodeTimerOutputs.csv")
 	{
 		if (timerEnded)
 		{
-			std::string fullFileName = FileName + fileEnd;
+			CalculateOutputs();
+			std::string fullFileName = FileName;
 			std::ofstream OutputFile(fullFileName);  //open file
 			OutputFile << "frame, time (" << getUnit() << ')';
 			for (int i = 0; i < timesCollected; i++)
 			{
-				OutputFile << '\n' << i << ',' << timesArray[i];
+				OutputFile << '\n' << i << ',' << allTimes[i];
 			}
 			OutputFile << "\n\n";
+			OutputFile << "\naverage," << Average();
+			OutputFile << "\nmin," << TimeMin();
+			OutputFile << "\nmax," << TimeMax();
 			OutputFile.close();  //close file
 		}
 	}
 
+	void CheckPrint(int desiredAmountOfTimesInfo, std::string FileName)
+	{
+		if (hasPrinted == false && (timesCollected >= desiredAmountOfTimesInfo))
+		{
+			PrintToFile(FileName);
+			hasPrinted = true;
+		}
+	}
 };
