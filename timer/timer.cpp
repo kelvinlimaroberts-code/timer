@@ -25,7 +25,7 @@ void static useCOut()
             << "\nmy doublager: " << doublager
             << "\nmy longeger: " << longeger;
         dt.EndTimer();
-        dt.ElapsedInNanoSeconds();
+        dt.ElapsedInMicroSeconds();
         dt.StoreTime();
     }
     dt.CalculateOutputs();
@@ -42,7 +42,7 @@ void static usePrintF()
         dt2.StartTimer();
         std::printf("\n\nI am using Print F right now. I like numbers.\nmy integer: %i\nmy floateger: %f\nmy doublager: %lf\nmy longeger: %li", integer, floateger, doublager, longeger);
         dt2.EndTimer();
-        dt2.ElapsedInNanoSeconds();
+        dt2.ElapsedInMicroSeconds();
         dt2.StoreTime();
     }
     dt2.CalculateOutputs();
