@@ -11,8 +11,8 @@ long long coutTimeMax = 0;
 long long printFTimeAverage = 0;
 long long printFTimeMin = 0;
 long long printFTimeMax = 0;
-timer_file dt;
-timer_file dt2;
+Timer_File dt;
+Timer_File dt2;
 
 void static useCOut()
 {

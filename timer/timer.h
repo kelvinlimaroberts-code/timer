@@ -159,7 +159,7 @@ public:
 			OutputFile << "frame, time (" << getUnit() << ')';
 			for (int i = 0; i < timesCollected; i++)
 			{
-				OutputFile << '\n' << i << ',' << allTimes[i];
+				OutputFile << '\n' << i << ',' << timesArray[i];
 			}
 			OutputFile << "\n\n";
 			OutputFile << "\naverage," << Average();
